@@ -26,6 +26,41 @@ final class AppState {
 
     var preparingMessage: String = "Prepping the patch"
 
+    var screenshotAutoShowsWinEntry: Bool = false
+
+    init() {
+        if ScreenshotMode.isActive {
+            applyScreenshotMode()
+        }
+    }
+
+    private func applyScreenshotMode() {
+        appearance = ScreenshotMode.appearance
+        scoreStore.applyScreenshotSeed()
+        UserDefaults.standard.set(true, forKey: Self.tutorialSeenKey)
+
+        switch ScreenshotMode.target {
+        case .home:
+            screen = .home
+        case .game:
+            activeGame = Game.screenshotForageBoard()
+            screen = .game
+        case .tutorial:
+            let flow = TutorialFlow()
+            flow.applyScreenshotSeed()
+            tutorialFlow = flow
+            screen = .tutorial
+        case .win:
+            activeGame = Game.screenshotWonBoard()
+            screenshotAutoShowsWinEntry = true
+            screen = .game
+        case .scores:
+            screen = .home
+            sheetTab = .scores
+            isSheetPresented = true
+        }
+    }
+
     var hasSeenTutorial: Bool {
         UserDefaults.standard.bool(forKey: Self.tutorialSeenKey)
     }
@@ -122,7 +157,8 @@ struct RootView: View {
                     game: appState.activeGame,
                     scoreStore: appState.scoreStore,
                     onGoHome: appState.goHome,
-                    onChangeDifficulty: { appState.openSheet(tab: .patch) }
+                    onChangeDifficulty: { appState.openSheet(tab: .patch) },
+                    screenshotAutoShowsWinEntry: appState.screenshotAutoShowsWinEntry
                 )
                 .transition(.opacity)
             case .tutorial:

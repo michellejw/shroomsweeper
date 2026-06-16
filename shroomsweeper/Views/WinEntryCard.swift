@@ -105,6 +105,7 @@ struct WinEntrySheet: View {
         .scrollIndicators(.hidden)
         .background(palette.appBg.ignoresSafeArea())
         .onAppear {
+            guard !ScreenshotMode.isActive else { return }
             Task {
                 try? await Task.sleep(for: .milliseconds(250))
                 initialsFocused = true

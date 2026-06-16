@@ -202,3 +202,16 @@ final class TutorialFlow {
         nudgeMessage = nil
     }
 }
+
+// MARK: - Screenshot seeding
+
+extension TutorialFlow {
+    /// Jumps the flow to the "Flag the mushroom" step with the Flag-button nudge
+    /// active, after revealing the start tile so the board looks lived-in.
+    func applyScreenshotSeed() {
+        game.reveal(at: TutorialFlow.startTile)
+        step = .flag
+        game.mode = .forage
+        nudgeMessage = "First tap \"Flag\" below to switch modes."
+    }
+}

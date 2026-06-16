@@ -207,6 +207,46 @@ final class Game {
     }
 }
 
+// MARK: - Screenshot seeding
+
+extension Game {
+    /// Forager-difficulty board mid-foraging: a flood-revealed top-right patch,
+    /// two flags placed on known mines, timer parked at a believable 0:47.
+    static func screenshotForageBoard() -> Game {
+        let mines: Set<Int> = [10, 21, 27, 28, 38, 39, 44, 60, 65, 73]
+        let game = Game(
+            rows: 9, cols: 9, mineCount: mines.count,
+            preplacedMines: mines, difficulty: .forager
+        )
+        game.reveal(at: 8)
+        game.cells[10].isFlagged = true
+        game.cells[44].isFlagged = true
+        game.elapsedSeconds = 47
+        game.mode = .forage
+        return game
+    }
+
+    /// Forager-difficulty board in the `.won` state, every safe cell revealed
+    /// and every mushroom flagged. Time parked at 0:38.
+    static func screenshotWonBoard() -> Game {
+        let mines: Set<Int> = [10, 21, 27, 28, 38, 39, 44, 60, 65, 73]
+        let game = Game(
+            rows: 9, cols: 9, mineCount: mines.count,
+            preplacedMines: mines, difficulty: .forager
+        )
+        for i in game.cells.indices {
+            if game.cells[i].isMine {
+                game.cells[i].isFlagged = true
+            } else {
+                game.cells[i].isRevealed = true
+            }
+        }
+        game.status = .won
+        game.elapsedSeconds = 38
+        return game
+    }
+}
+
 extension Int {
     var asTimerString: String {
         let m = self / 60

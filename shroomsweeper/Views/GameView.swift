@@ -6,6 +6,7 @@ struct GameView: View {
     let scoreStore: ScoreStore
     let onGoHome: () -> Void
     let onChangeDifficulty: () -> Void
+    var screenshotAutoShowsWinEntry: Bool = false
 
     @Environment(\.palette) private var palette
 
@@ -49,10 +50,17 @@ struct GameView: View {
         .padding(.top, 6)
         .background(palette.appBg.ignoresSafeArea())
         .task(id: ObjectIdentifier(game)) {
+            guard !ScreenshotMode.isActive else { return }
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(1))
                 if Task.isCancelled { return }
                 game.tick()
+            }
+        }
+        .onAppear {
+            if screenshotAutoShowsWinEntry {
+                resultRevealed = true
+                showingWinEntry = true
             }
         }
         .onChange(of: game.status) { _, newStatus in

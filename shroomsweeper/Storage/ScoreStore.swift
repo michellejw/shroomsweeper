@@ -79,3 +79,25 @@ final class ScoreStore {
         }
     }
 }
+
+// MARK: - Screenshot seeding
+
+extension ScoreStore {
+    /// Replace in-memory scores with a believable Forager leaderboard for screenshots.
+    /// Does not persist — keeps the user's real saved scores intact.
+    func applyScreenshotSeed() {
+        let now = Date()
+        scores[.forager] = [
+            ScoreEntry(initials: "MEL", seconds: 42, date: now),
+            ScoreEntry(initials: "JAY", seconds: 51, date: now),
+            ScoreEntry(initials: "ROO", seconds: 68, date: now),
+            ScoreEntry(initials: "SAM", seconds: 89, date: now),
+            ScoreEntry(initials: "PIP", seconds: 104, date: now),
+        ]
+        scores[.woodlander] = [
+            ScoreEntry(initials: "MEL", seconds: 187, date: now),
+            ScoreEntry(initials: "JAY", seconds: 213, date: now),
+        ]
+        scores[.mycologist] = []
+    }
+}
