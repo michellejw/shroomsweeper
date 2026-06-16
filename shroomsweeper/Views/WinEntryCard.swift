@@ -1,3 +1,4 @@
+import ShroomKit
 import SwiftUI
 
 struct WinEntrySheet: View {
