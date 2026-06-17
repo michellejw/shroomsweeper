@@ -1,6 +1,6 @@
 import Foundation
 
-struct Cell: Identifiable, Hashable {
+struct Cell: Identifiable, Hashable, Codable {
     let id: Int
     var isMine: Bool = false
     var neighborMines: Int = 0
@@ -9,7 +9,7 @@ struct Cell: Identifiable, Hashable {
     var isExploded: Bool = false
 }
 
-enum GameStatus {
+enum GameStatus: String, Codable {
     case ready
     case playing
     case won
@@ -18,9 +18,21 @@ enum GameStatus {
     var isFinished: Bool { self == .won || self == .lost }
 }
 
-enum InteractionMode {
+enum InteractionMode: String, Codable {
     case forage
     case flag
+}
+
+/// Codable snapshot of an in-progress game, persisted across launches.
+struct GameSnapshot: Codable, Sendable {
+    let difficulty: Difficulty
+    let rows: Int
+    let cols: Int
+    let mineCount: Int
+    let cells: [Cell]
+    let status: GameStatus
+    let mode: InteractionMode
+    let elapsedSeconds: Int
 }
 
 @Observable
@@ -142,6 +154,42 @@ final class Game {
     func tick() {
         guard status == .playing else { return }
         elapsedSeconds += 1
+    }
+
+    // MARK: Persistence
+
+    /// Build a game from a saved snapshot. Returns nil if the snapshot is
+    /// in a finished or pre-play state — those don't need restoring.
+    convenience init?(restoring snapshot: GameSnapshot) {
+        guard snapshot.status == .playing else { return nil }
+        self.init(
+            rows: snapshot.rows,
+            cols: snapshot.cols,
+            mineCount: snapshot.mineCount,
+            difficulty: snapshot.difficulty
+        )
+        self.cells = snapshot.cells
+        self.status = snapshot.status
+        self.mode = snapshot.mode
+        self.elapsedSeconds = snapshot.elapsedSeconds
+    }
+
+    /// Capture the current play session, or nil if there's nothing meaningful
+    /// to save (tutorial, screenshot mode, pre-first-tap, or finished).
+    func snapshot() -> GameSnapshot? {
+        guard !isTutorial,
+              status == .playing,
+              let difficulty else { return nil }
+        return GameSnapshot(
+            difficulty: difficulty,
+            rows: rows,
+            cols: cols,
+            mineCount: mineCount,
+            cells: cells,
+            status: status,
+            mode: mode,
+            elapsedSeconds: elapsedSeconds
+        )
     }
 
     private func neighbors(of index: Int) -> [Int] {

@@ -6,9 +6,12 @@ struct GameView: View {
     let scoreStore: ScoreStore
     let onGoHome: () -> Void
     let onChangeDifficulty: () -> Void
+    let onSave: () -> Void
+    let onClearSave: () -> Void
     var screenshotAutoShowsWinEntry: Bool = false
 
     @Environment(\.palette) private var palette
+    @Environment(\.scenePhase) private var scenePhase
 
     // Win flow state — local to a single playthrough.
     @State private var resultRevealed: Bool = false
@@ -30,11 +33,13 @@ struct GameView: View {
                     withAnimation(.easeOut(duration: 0.14)) {
                         game.tap(at: idx)
                     }
+                    onSave()
                 },
                 onLongPress: { idx in
                     withAnimation(.easeOut(duration: 0.14)) {
                         game.toggleFlag(at: idx)
                     }
+                    onSave()
                 }
             )
             Spacer(minLength: 16)
@@ -69,6 +74,7 @@ struct GameView: View {
                 showingWinEntry = false
                 return
             }
+            onClearSave()
             Task {
                 try? await Task.sleep(for: .milliseconds(750))
                 resultRevealed = true
@@ -88,6 +94,11 @@ struct GameView: View {
         .sensoryFeedback(.impact(weight: .heavy, intensity: 1.0), trigger: game.flagToggleTick)
         .sensoryFeedback(.success, trigger: game.winTick)
         .sensoryFeedback(.error, trigger: game.loseTick)
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background || phase == .inactive {
+                onSave()
+            }
+        }
         .sheet(isPresented: $showingWinEntry) {
             WinEntrySheet(
                 timeText: game.elapsedSeconds.asTimerString,
@@ -157,6 +168,7 @@ struct GameView: View {
                     entrySkipped = false
                     initials = ""
                 }
+                onClearSave()
             } label: {
                 MushroomIcon()
                     .frame(width: 30, height: 30)

@@ -13,13 +13,17 @@ enum Screen {
 @Observable
 final class AppState {
     private static let tutorialSeenKey = "shroom_tutorial_seen_v1"
+    private static let themeModeKey = "shroom_theme_mode_v1"
 
     var screen: Screen = .launching
-    var appearance: Appearance = .forest
+    var themeMode: ThemeMode {
+        didSet { UserDefaults.standard.set(themeMode.rawValue, forKey: Self.themeModeKey) }
+    }
     var selectedDifficulty: Difficulty = .forager
     var activeGame: Game = Game(difficulty: .forager)
     var tutorialFlow: TutorialFlow? = nil
     let scoreStore: ScoreStore = ScoreStore()
+    let gameStore: GameStore = GameStore()
 
     var isSheetPresented: Bool = false
     var sheetTab: SheetTab = .patch
@@ -29,13 +33,15 @@ final class AppState {
     var screenshotAutoShowsWinEntry: Bool = false
 
     init() {
+        let saved = UserDefaults.standard.string(forKey: Self.themeModeKey)
+        self.themeMode = saved.flatMap(ThemeMode.init(rawValue:)) ?? .system
         if ScreenshotMode.isActive {
             applyScreenshotMode()
         }
     }
 
     private func applyScreenshotMode() {
-        appearance = ScreenshotMode.appearance
+        themeMode = ScreenshotMode.appearance == .twilight ? .twilight : .forest
         scoreStore.applyScreenshotSeed()
         UserDefaults.standard.set(true, forKey: Self.tutorialSeenKey)
 
@@ -66,10 +72,36 @@ final class AppState {
     }
 
     func finishLaunch() {
+        // Resume an in-progress game if one was saved.
+        if let snapshot = gameStore.load(),
+           let restored = Game(restoring: snapshot) {
+            activeGame = restored
+            selectedDifficulty = snapshot.difficulty
+            screen = .game
+            return
+        }
         if hasSeenTutorial {
             screen = .home
         } else {
             screen = .welcome
+        }
+    }
+
+    func saveGame() {
+        guard let snapshot = activeGame.snapshot() else { return }
+        gameStore.save(snapshot)
+    }
+
+    func clearSavedGame() {
+        gameStore.clear()
+    }
+
+    /// Cycle through System → Light → Dark → System.
+    func cycleThemeMode() {
+        switch themeMode {
+        case .system:   themeMode = .forest
+        case .forest:   themeMode = .twilight
+        case .twilight: themeMode = .system
         }
     }
 
@@ -81,6 +113,7 @@ final class AppState {
     func startGame(difficulty: Difficulty) {
         selectedDifficulty = difficulty
         preparingMessage = "Prepping the patch"
+        clearSavedGame()
         screen = .preparing
         Task { @MainActor in
             activeGame = Game(difficulty: difficulty)
@@ -90,6 +123,7 @@ final class AppState {
     }
 
     func goHome() {
+        if activeGame.status.isFinished { clearSavedGame() }
         screen = .home
     }
 
@@ -117,9 +151,10 @@ final class AppState {
 
 struct RootView: View {
     @State private var appState = AppState()
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        let palette = Palette.palette(for: appState.appearance)
+        let palette = Palette.palette(for: colorScheme)
         ZStack {
             palette.appBg.ignoresSafeArea()
             switch appState.screen {
@@ -132,8 +167,8 @@ struct RootView: View {
                     }
             case .welcome:
                 WelcomeView(
-                    appearance: appState.appearance,
-                    onToggleAppearance: toggleAppearance,
+                    themeMode: appState.themeMode,
+                    onCycleTheme: { appState.cycleThemeMode() },
                     onStartTutorial: { appState.startTutorial() },
                     onSkipTutorial: { appState.skipWelcome() }
                 )
@@ -141,8 +176,8 @@ struct RootView: View {
             case .home:
                 HomeView(
                     selectedDifficulty: appState.selectedDifficulty,
-                    appearance: appState.appearance,
-                    onToggleAppearance: toggleAppearance,
+                    themeMode: appState.themeMode,
+                    onCycleTheme: { appState.cycleThemeMode() },
                     onPickDifficulty: { appState.openSheet(tab: .patch) },
                     onPlay: { appState.startGame(difficulty: appState.selectedDifficulty) },
                     onOpenBestTimes: { appState.openSheet(tab: .scores) },
@@ -158,6 +193,8 @@ struct RootView: View {
                     scoreStore: appState.scoreStore,
                     onGoHome: appState.goHome,
                     onChangeDifficulty: { appState.openSheet(tab: .patch) },
+                    onSave: { appState.saveGame() },
+                    onClearSave: { appState.clearSavedGame() },
                     screenshotAutoShowsWinEntry: appState.screenshotAutoShowsWinEntry
                 )
                 .transition(.opacity)
@@ -173,8 +210,9 @@ struct RootView: View {
             }
         }
         .environment(\.palette, palette)
+        .preferredColorScheme(appState.themeMode.preferredColorScheme)
         .animation(.easeInOut(duration: 0.25), value: appState.screen)
-        .animation(.easeInOut(duration: 0.2), value: appState.appearance)
+        .animation(.easeInOut(duration: 0.2), value: appState.themeMode)
         .sheet(isPresented: $appState.isSheetPresented) {
             OptionsSheet(
                 tab: $appState.sheetTab,
@@ -193,9 +231,5 @@ struct RootView: View {
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
         }
-    }
-
-    private func toggleAppearance() {
-        appState.appearance = appState.appearance == .forest ? .twilight : .forest
     }
 }

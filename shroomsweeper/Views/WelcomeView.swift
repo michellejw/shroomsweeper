@@ -2,8 +2,8 @@ import ShroomKit
 import SwiftUI
 
 struct WelcomeView: View {
-    let appearance: Appearance
-    let onToggleAppearance: () -> Void
+    let themeMode: ThemeMode
+    let onCycleTheme: () -> Void
     let onStartTutorial: () -> Void
     let onSkipTutorial: () -> Void
 
@@ -19,8 +19,8 @@ struct WelcomeView: View {
             MushroomIcon()
         }
         .overlay(alignment: .topTrailing) {
-            Button(action: onToggleAppearance) {
-                Image(systemName: appearance == .forest ? "moon.fill" : "sun.max.fill")
+            Button(action: onCycleTheme) {
+                Image(systemName: themeIconName(for: themeMode))
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(palette.sub)
                     .frame(width: 44, height: 44)
