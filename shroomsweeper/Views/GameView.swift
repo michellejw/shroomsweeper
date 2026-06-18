@@ -8,6 +8,8 @@ struct GameView: View {
     let onChangeDifficulty: () -> Void
     let onSave: () -> Void
     let onClearSave: () -> Void
+    let themeMode: ThemeMode
+    let onCycleTheme: () -> Void
     var screenshotAutoShowsWinEntry: Bool = false
 
     @Environment(\.palette) private var palette
@@ -139,6 +141,19 @@ struct GameView: View {
             .buttonStyle(.plain)
 
             Spacer()
+
+            Button(action: onCycleTheme) {
+                Image(systemName: themeIconName(for: themeMode))
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(palette.sub)
+                    .frame(width: 44, height: 44)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(palette.pill)
+                    )
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
 
             Button(action: onGoHome) {
                 Image(systemName: "house.fill")

@@ -195,6 +195,8 @@ struct RootView: View {
                     onChangeDifficulty: { appState.openSheet(tab: .patch) },
                     onSave: { appState.saveGame() },
                     onClearSave: { appState.clearSavedGame() },
+                    themeMode: appState.themeMode,
+                    onCycleTheme: { appState.cycleThemeMode() },
                     screenshotAutoShowsWinEntry: appState.screenshotAutoShowsWinEntry
                 )
                 .transition(.opacity)
