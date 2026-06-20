@@ -21,40 +21,20 @@ struct ResultBar: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 12) {
-                MushroomIcon()
-                    .frame(width: 28, height: 28)
-                    .padding(9)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(palette.tierBg)
-                    )
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(palette.text)
-                    Text(subtitle)
-                        .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(palette.sub)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 0)
-            }
-            HStack(spacing: 10) {
-                Button("Menu", action: onMenu)
-                    .buttonStyle(.shroomOutline)
-
-                Button(won ? "Play again" : "Try again", action: onPlayAgain)
-                    .buttonStyle(.shroomPrimary)
-            }
+        ResultCard(
+            title: title,
+            subtitle: subtitle,
+            primaryLabel: won ? "Play again" : "Try again", onPrimary: onPlayAgain,
+            secondaryLabel: "Menu", onSecondary: onMenu
+        ) {
+            MushroomIcon()
+                .frame(width: 28, height: 28)
+                .padding(9)
+                .background(
+                    RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                        .fill(palette.tierBg)
+                )
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(palette.pill)
-        )
         .transition(.move(edge: .bottom).combined(with: .opacity))
     }
 }
