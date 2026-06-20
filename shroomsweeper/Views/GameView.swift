@@ -251,43 +251,13 @@ struct GameView: View {
     }
 
     private var modeToggle: some View {
-        HStack(spacing: 10) {
-            modeButton(
-                title: "Forage",
-                isActive: game.mode == .forage,
-                icon: nil,
-                action: { game.mode = .forage }
-            )
-            modeButton(
-                title: "Flag",
-                isActive: game.mode == .flag,
-                icon: { AnyView(FlagIcon().frame(width: 20, height: 20)) },
-                action: { game.mode = .flag }
-            )
-        }
-    }
-
-    private func modeButton(
-        title: String,
-        isActive: Bool,
-        icon: (() -> AnyView)?,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            HStack(spacing: 8) {
-                icon?()
-                Text(title)
-                    .font(.system(.headline, design: .rounded))
-            }
-            .frame(maxWidth: .infinity)
-            .frame(minHeight: 54)
-            .foregroundStyle(isActive ? palette.accentText : palette.sub)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(isActive ? palette.accent : palette.pill)
-            )
-        }
-        .buttonStyle(.plain)
+        SegmentedToggle(
+            selection: Binding(get: { game.mode }, set: { game.mode = $0 }),
+            segments: [
+                .init(.forage, title: "Forage"),
+                .init(.flag, title: "Flag") { FlagIcon().frame(width: 20, height: 20) },
+            ]
+        )
     }
 
     private var hint: some View {
