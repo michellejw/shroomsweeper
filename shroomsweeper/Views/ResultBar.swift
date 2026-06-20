@@ -42,37 +42,11 @@ struct ResultBar: View {
                 Spacer(minLength: 0)
             }
             HStack(spacing: 10) {
-                Button(action: onMenu) {
-                    Text("Menu")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(palette.text)
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: 44)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(palette.tierBg)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .stroke(palette.tierBorder, lineWidth: 1)
-                                )
-                        )
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
+                Button("Menu", action: onMenu)
+                    .buttonStyle(.shroomOutline)
 
-                Button(action: onPlayAgain) {
-                    Text(won ? "Play again" : "Try again")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(palette.accentText)
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: 44)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(palette.accent)
-                        )
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
+                Button(won ? "Play again" : "Try again", action: onPlayAgain)
+                    .buttonStyle(.shroomPrimary)
             }
         }
         .padding(.horizontal, 14)

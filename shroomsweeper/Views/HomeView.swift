@@ -59,18 +59,8 @@ struct HomeView: View {
                 }
                 .buttonStyle(.plain)
 
-                Button(action: onPlay) {
-                    Text("Play")
-                        .font(.system(.title3, design: .rounded).weight(.semibold))
-                        .foregroundStyle(palette.accentText)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
-                        .background(
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(palette.accent)
-                        )
-                }
-                .buttonStyle(.plain)
+                Button("Play", action: onPlay)
+                    .buttonStyle(.shroomPrimary(prominent: true))
 
                 HStack(spacing: 6) {
                     Button(action: onOpenBestTimes) {

@@ -91,20 +91,8 @@ struct OptionsSheet: View {
             ForEach(Difficulty.allCases) { difficulty in
                 difficultyRow(difficulty)
             }
-            Button(action: {
-                onConfirm()
-            }) {
-                Text(isInGame ? "Start new game" : "Play")
-                    .font(.system(.headline, design: .rounded))
-                    .foregroundStyle(palette.accentText)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 15)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(palette.accent)
-                    )
-            }
-            .buttonStyle(.plain)
+            Button(isInGame ? "Start new game" : "Play", action: onConfirm)
+                .buttonStyle(.shroomPrimary)
             .padding(.top, 6)
         }
     }

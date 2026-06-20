@@ -96,32 +96,14 @@ struct TutorialView: View {
                     }
                 } label: {
                     Text("Got it")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(palette.accentText)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 13)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(palette.accent)
-                        )
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.shroomPrimary)
                 .padding(.top, 10)
             }
             if flow.showDoneButton {
-                Button(action: onFinish) {
-                    Text("Start foraging")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(palette.accentText)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 13)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(palette.accent)
-                        )
-                }
-                .buttonStyle(.plain)
-                .padding(.top, 10)
+                Button("Start foraging", action: onFinish)
+                    .buttonStyle(.shroomPrimary)
+                    .padding(.top, 10)
             }
         }
         .padding(.horizontal, 16)

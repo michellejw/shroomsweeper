@@ -66,35 +66,11 @@ struct WinEntrySheet: View {
                     .frame(maxWidth: .infinity)
 
                 HStack(spacing: 10) {
-                    Button(action: onSkip) {
-                        Text("Skip")
-                            .font(.system(.headline, design: .rounded))
-                            .foregroundStyle(palette.text)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .fill(palette.tierBg)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                            .stroke(palette.tierBorder, lineWidth: 1)
-                                    )
-                            )
-                    }
-                    .buttonStyle(.plain)
+                    Button("Skip", action: onSkip)
+                        .buttonStyle(.shroomOutline)
 
-                    Button(action: onSave) {
-                        Text("Save")
-                            .font(.system(.headline, design: .rounded))
-                            .foregroundStyle(palette.accentText)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .fill(palette.accent)
-                            )
-                    }
-                    .buttonStyle(.plain)
+                    Button("Save", action: onSave)
+                        .buttonStyle(.shroomPrimary)
                 }
             }
             .padding(.horizontal, 22)
