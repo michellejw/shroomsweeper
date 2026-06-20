@@ -19,17 +19,9 @@ struct WelcomeView: View {
             MushroomIcon()
         }
         .overlay(alignment: .topTrailing) {
-            Button(action: onCycleTheme) {
-                Image(systemName: themeIconName(for: themeMode))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(palette.sub)
-                    .frame(width: 44, height: 44)
-                    .background(Circle().fill(palette.pill))
-                    .contentShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 24)
-            .padding(.top, 16)
+            PillIconButton(systemName: themeMode.iconName, accessibilityLabel: "Theme", shape: .circle, action: onCycleTheme)
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
         }
     }
 }

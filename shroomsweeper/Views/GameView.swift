@@ -142,31 +142,9 @@ struct GameView: View {
 
             Spacer()
 
-            Button(action: onCycleTheme) {
-                Image(systemName: themeIconName(for: themeMode))
-                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                    .foregroundStyle(palette.sub)
-                    .frame(width: 44, height: 44)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(palette.pill)
-                    )
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+            PillIconButton(systemName: themeMode.iconName, accessibilityLabel: "Theme", action: onCycleTheme)
 
-            Button(action: onGoHome) {
-                Image(systemName: "house.fill")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(palette.sub)
-                    .frame(width: 44, height: 44)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(palette.pill)
-                    )
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+            PillIconButton(systemName: "house.fill", accessibilityLabel: "Home", action: onGoHome)
         }
     }
 

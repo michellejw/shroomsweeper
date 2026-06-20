@@ -16,15 +16,7 @@ struct HomeView: View {
         VStack(spacing: 38) {
             HStack {
                 Spacer()
-                Button(action: onCycleTheme) {
-                    Image(systemName: themeIconName(for: themeMode))
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(palette.sub)
-                        .frame(width: 44, height: 44)
-                        .background(Circle().fill(palette.pill))
-                        .contentShape(Circle())
-                }
-                .buttonStyle(.plain)
+                PillIconButton(systemName: themeMode.iconName, accessibilityLabel: "Theme", shape: .circle, action: onCycleTheme)
             }
             Spacer(minLength: 0)
             VStack(spacing: 14) {
@@ -114,14 +106,5 @@ struct HomeView: View {
         .padding(.vertical, 16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.appBg.ignoresSafeArea())
-    }
-}
-
-/// Pick a glyph that represents the current theme mode in the quick toggle.
-func themeIconName(for mode: ThemeMode) -> String {
-    switch mode {
-    case .system:   return "circle.lefthalf.filled"
-    case .forest:   return "sun.max.fill"
-    case .twilight: return "moon.fill"
     }
 }
