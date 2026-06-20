@@ -98,42 +98,10 @@ struct OptionsSheet: View {
     }
 
     private func difficultyRow(_ difficulty: Difficulty) -> some View {
-        let isSelected = selectedDifficulty == difficulty
-        return Button {
+        SelectionCard(title: difficulty.label, subtitle: difficulty.sizeDescription,
+                      isSelected: selectedDifficulty == difficulty) {
             selectedDifficulty = difficulty
-        } label: {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(difficulty.label)
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(palette.text)
-                    Text(difficulty.sizeDescription)
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(palette.sub)
-                }
-                Spacer()
-                ZStack {
-                    Circle()
-                        .stroke(isSelected ? palette.accent : palette.tierBorder, lineWidth: 2)
-                        .background(Circle().fill(isSelected ? palette.accent : .clear))
-                        .frame(width: 22, height: 22)
-                    if isSelected {
-                        Circle().fill(palette.accentText).frame(width: 8, height: 8)
-                    }
-                }
-            }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 15)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(isSelected ? palette.tierSelBg : palette.tierBg)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(isSelected ? palette.accent : palette.tierBorder, lineWidth: 2)
-                    )
-            )
         }
-        .buttonStyle(.plain)
     }
 
     // MARK: Scores
