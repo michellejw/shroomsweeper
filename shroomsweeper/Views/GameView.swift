@@ -21,6 +21,8 @@ struct GameView: View {
     @State private var scoreSaved: Bool = false
     @State private var entrySkipped: Bool = false
     @State private var showingWinEntry: Bool = false
+    @State private var confirmingLeave: Bool = false
+    @State private var confirmingReset: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -113,6 +115,45 @@ struct GameView: View {
             .presentationDragIndicator(.visible)
             .interactiveDismissDisabled(false)
         }
+        .alert("Leave game?", isPresented: $confirmingLeave) {
+            Button("Cancel", role: .cancel) { }
+            Button("Leave", role: .destructive) { onGoHome() }
+        } message: {
+            Text("Your progress on this game will be lost.")
+        }
+        .alert("Start over?", isPresented: $confirmingReset) {
+            Button("Cancel", role: .cancel) { }
+            Button("Start over", role: .destructive) { performReset() }
+        } message: {
+            Text("This game's progress will be lost.")
+        }
+    }
+
+    private func attemptGoHome() {
+        if game.status == .playing {
+            confirmingLeave = true
+        } else {
+            onGoHome()
+        }
+    }
+
+    private func attemptReset() {
+        if game.status == .playing {
+            confirmingReset = true
+        } else {
+            performReset()
+        }
+    }
+
+    private func performReset() {
+        withAnimation(.easeOut(duration: 0.2)) {
+            game.reset()
+            resultRevealed = false
+            scoreSaved = false
+            entrySkipped = false
+            initials = ""
+        }
+        onClearSave()
     }
 
     private var titleRow: some View {
@@ -144,7 +185,7 @@ struct GameView: View {
 
             PillIconButton(systemName: themeMode.iconName, accessibilityLabel: "Theme", action: onCycleTheme)
 
-            PillIconButton(systemName: "house.fill", accessibilityLabel: "Home", action: onGoHome)
+            PillIconButton(systemName: "house.fill", accessibilityLabel: "Home", action: attemptGoHome)
         }
     }
 
@@ -154,14 +195,7 @@ struct GameView: View {
                      text: "\(game.flagsRemaining)")
             Spacer()
             Button {
-                withAnimation(.easeOut(duration: 0.2)) {
-                    game.reset()
-                    resultRevealed = false
-                    scoreSaved = false
-                    entrySkipped = false
-                    initials = ""
-                }
-                onClearSave()
+                attemptReset()
             } label: {
                 MushroomIcon()
                     .frame(width: 30, height: 30)
