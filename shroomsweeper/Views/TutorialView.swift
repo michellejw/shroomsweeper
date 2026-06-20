@@ -68,10 +68,7 @@ struct TutorialView: View {
     private var tutorialBanner: some View {
         VStack(alignment: .leading, spacing: 5) {
             HStack {
-                Text(flow.stepLabel)
-                    .font(.system(.caption2, design: .rounded).weight(.semibold))
-                    .tracking(1.3)
-                    .foregroundStyle(palette.accent)
+                EyebrowLabel(flow.stepLabel, tint: .accent)
                 Spacer()
                 Button(action: onSkip) {
                     Text("Skip")
