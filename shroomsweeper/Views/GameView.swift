@@ -173,29 +173,24 @@ struct GameView: View {
             }
             .buttonStyle(.plain)
             Spacer()
-            statPill(icon: {
-                AnyView(
-                    Image(systemName: "timer")
-                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(palette.sub)
-                )
-            }, text: game.elapsedSeconds.asTimerString)
+            StatPill(game.elapsedSeconds.asTimerString, systemName: "timer")
         }
     }
 
+    /// Local stat pill matching ShroomKit's StatPill metrics, for the flags
+    /// readout whose leading glyph is the MushroomIcon mascot (not an SF Symbol).
     private func statPill(icon: () -> AnyView, text: String) -> some View {
-        HStack(spacing: 7) {
+        HStack(spacing: 6) {
             icon()
             Text(text)
-                .font(.system(.title3, design: .rounded).weight(.semibold))
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
                 .foregroundStyle(palette.text)
                 .monospacedDigit()
         }
-        .padding(.horizontal, 15)
-        .padding(.vertical, 9)
-        .frame(minWidth: 76)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 7)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(palette.pill)
         )
     }
