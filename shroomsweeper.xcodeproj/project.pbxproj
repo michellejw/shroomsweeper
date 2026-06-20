@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		D454E65D2FE10A1B00048F33 /* ShroomKit in Frameworks */ = {isa = PBXBuildFile; productRef = D454E65C2FE10A1B00048F33 /* ShroomKit */; };
-		D454E6602FE18E2C00048F33 /* ShroomKit in Frameworks */ = {isa = PBXBuildFile; productRef = D454E65F2FE18E2C00048F33 /* ShroomKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +41,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D454E65D2FE10A1B00048F33 /* ShroomKit in Frameworks */,
-				D454E6602FE18E2C00048F33 /* ShroomKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +92,6 @@
 			name = shroomsweeper;
 			packageProductDependencies = (
 				D454E65C2FE10A1B00048F33 /* ShroomKit */,
-				D454E65F2FE18E2C00048F33 /* ShroomKit */,
 			);
 			productName = shroomsweeper;
 			productReference = D454E5D82FDE2D6A00048F33 /* shroomsweeper.app */;
@@ -125,7 +122,7 @@
 			mainGroup = D454E5CF2FDE2D6A00048F33;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				D454E65E2FE18E2C00048F33 /* XCLocalSwiftPackageReference "../../../../games/shroomkit" */,
+				D48F8CDA2FE64D3C00F5BF13 /* XCLocalSwiftPackageReference "../shroomkit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D454E5D92FDE2D6A00048F33 /* Products */;
@@ -381,18 +378,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		D454E65E2FE18E2C00048F33 /* XCLocalSwiftPackageReference "../../../../games/shroomkit" */ = {
+		D48F8CDA2FE64D3C00F5BF13 /* XCLocalSwiftPackageReference "../shroomkit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../../games/shroomkit;
+			relativePath = ../shroomkit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		D454E65C2FE10A1B00048F33 /* ShroomKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ShroomKit;
-		};
-		D454E65F2FE18E2C00048F33 /* ShroomKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ShroomKit;
 		};
