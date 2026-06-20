@@ -96,13 +96,9 @@ final class AppState {
         gameStore.clear()
     }
 
-    /// Cycle through System → Light → Dark → System.
+    /// Quick toggle: a 2-state light/dark flip (Forest ↔ Twilight).
     func cycleThemeMode() {
-        switch themeMode {
-        case .system:   themeMode = .forest
-        case .forest:   themeMode = .twilight
-        case .twilight: themeMode = .system
-        }
+        themeMode = (themeMode == .twilight) ? .forest : .twilight
     }
 
     func skipWelcome() {
