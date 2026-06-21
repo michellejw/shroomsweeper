@@ -66,34 +66,24 @@ struct TutorialView: View {
     // MARK: - Banner
 
     private var tutorialBanner: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            HStack {
-                EyebrowLabel(flow.stepLabel, tint: .accent)
-                Spacer()
-                Button(action: onSkip) {
-                    Text("Skip")
-                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(palette.sub)
-                        .padding(.horizontal, 12)
-                        .frame(minHeight: 44)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
+        TutorialBannerCard(
+            eyebrow: flow.stepLabel,
+            title: flow.title,
+            message: flow.body
+        ) {
+            Button(action: onSkip) {
+                Text("Skip")
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(palette.sub)
+                    .padding(.horizontal, 12)
+                    .frame(minHeight: 44)
+                    .contentShape(Rectangle())
             }
-            Text(flow.title)
-                .font(.system(.title3, design: .rounded).weight(.semibold))
-                .foregroundStyle(palette.text)
-                .padding(.top, 2)
-            Text(flow.body)
-                .font(.system(.callout, design: .rounded))
-                .foregroundStyle(palette.sub)
-                .lineSpacing(2)
-                .fixedSize(horizontal: false, vertical: true)
+            .buttonStyle(.plain)
+        } footer: {
             if flow.showNextButton {
                 Button {
-                    withAnimation(.easeOut(duration: 0.2)) {
-                        flow.advance()
-                    }
+                    withAnimation(.easeOut(duration: 0.2)) { flow.advance() }
                 } label: {
                     Text("Got it")
                 }
@@ -106,13 +96,6 @@ struct TutorialView: View {
                     .padding(.top, 10)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(palette.pill)
-        )
     }
 
     // MARK: - Mode toggle
