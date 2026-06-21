@@ -31,7 +31,7 @@ struct TutorialView: View {
                     }
                 )
                 if let msg = flow.nudgeMessage {
-                    nudgeToast(msg)
+                    NudgeToast(msg)
                         .padding(.top, 8)
                         .padding(.horizontal, 12)
                         .transition(.move(edge: .top).combined(with: .opacity))
@@ -113,25 +113,6 @@ struct TutorialView: View {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(palette.pill)
         )
-    }
-
-    private func nudgeToast(_ msg: String) -> some View {
-        Text(msg)
-            .font(.system(.subheadline, design: .rounded).weight(.semibold))
-            .foregroundStyle(palette.accent)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 13)
-            .padding(.vertical, 10)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(palette.tierBg)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .stroke(palette.accent, lineWidth: 1.5)
-                    )
-            )
-            .shadow(color: .black.opacity(0.18), radius: 10, x: 0, y: 6)
     }
 
     // MARK: - Mode toggle
